@@ -23,9 +23,19 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-southeast-2
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+      - name: Get ECR password
+        id: ecr_login
+        run: |
+          ECR_PASSWORD="$(docker run -i --rm -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_REGION amazon/aws-cli ecr-public get-login-password)"
+          echo "::add-mask::$ECR_PASSWORD"
+          echo "::set-output name=ecr-login-password::$ECR_PASSWORD"
+      
+      - name: Login to ECR public
+        uses: docker/login-action@v1
+        with:
+          username: AWS
+          password: ${{ steps.ecr_login.outputs.ecr-login-password }}
+          registry: public.ecr.aws
       
       - name: build and push
         run: |
