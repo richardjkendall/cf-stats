@@ -20,8 +20,7 @@ done
 cd ..
 
 # build report
-mkdir -p /var/www/html/stats
-zcat logs/*.gz | webalizer -n $HOSTNAME -F w3c -o /var/www/html/stats/ -
+zcat logs/*.gz | webalizer -n $HOSTNAME -F w3c -o /var/www/html/ -
 
 # run the command
 exec "$@"
