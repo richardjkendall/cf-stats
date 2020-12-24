@@ -13,7 +13,7 @@ for row in $(echo "$FILTER" | jq -r '.[] | @base64'); do
    }
    datefrag=$(_jq '.dateFragment')
    echo "syncing for date fragment: $datefrag"
-   aws s3 cp --exclude "*" --include "*$datefrag*" s3://$LOG_BUCKET/$LOG_PREFIX . --recursive
+   aws s3 sync --exclude "*" --include "*$datefrag*" s3://$LOG_BUCKET/$LOG_PREFIX . 
 done
 
 # go back to the home directory
